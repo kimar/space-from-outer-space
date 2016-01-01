@@ -5,15 +5,14 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import io.kida.spacefromouterspace.SpaceFromOuterSpaceGame
 
 object DesktopLauncher {
+
     @JvmStatic
     fun main(args: Array<String>) {
-        // val config = JglfwApplicationConfiguration()
-        val config = LwjglApplicationConfiguration();
+        val config = LwjglApplicationConfiguration()
         config.width = 640
         config.height = 480
         config.vSyncEnabled = true
-        // config.useHDPI = true;
-        // config.undecorated = true;
+        config.resizable = false
         LwjglApplication(SpaceFromOuterSpaceGame(), config)
     }
 }

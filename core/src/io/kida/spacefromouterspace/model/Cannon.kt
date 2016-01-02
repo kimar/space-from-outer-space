@@ -27,6 +27,11 @@ class Cannon {
     private var spriteBatch: SpriteBatch? = null
     private var projectiles: ArrayList<Projectile>? = null
 
+    // lock fire button
+    private var projectileFired = false
+    private var lastFireTime: Long = 0
+    private val fireTimeThreshold = 500
+
     private fun rotateDirection(direction: Direction) {
         if (direction == Direction.Right) {
             currentAngle -= 100 * Gdx.graphics.deltaTime
@@ -69,9 +74,18 @@ class Cannon {
         sprite.rotate(currentAngle)
         sprite.draw(spriteBatch)
 
+        // unlock fire button?
+        if (System.currentTimeMillis() >= lastFireTime + fireTimeThreshold) {
+            projectileFired = false
+        }
+
         // fire?
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            fire(currentAngle)
+            if (!projectileFired) {
+                fire(currentAngle)
+                lastFireTime = System.currentTimeMillis()
+            }
+            projectileFired = true
         }
     }
 

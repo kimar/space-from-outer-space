@@ -16,6 +16,10 @@ class Cannon {
         Left, Right
     }
 
+    // cannon position
+    private var cannonX: Double? = null
+    private var cannonY: Double? = null
+
     // private vars
     private var texture: Texture = Texture("cannon.png")
     private var currentAngle = 90f
@@ -57,8 +61,9 @@ class Cannon {
         sprite.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)
 
         // position cannon in lower middle part of window
-        sprite.setPosition(Gdx.graphics.width / 2.0f - texture.width / 2.0f,
-                Gdx.graphics.height / 4.0f - texture.height)
+        cannonX = Gdx.graphics.width / 2.0 - texture.width / 2.0
+        cannonY = Gdx.graphics.height / 4.0 - texture.height
+        sprite.setPosition(cannonX!!.toFloat(), cannonY!!.toFloat())
 
         // rotate cannon given to the rotation vector
         sprite.rotate(currentAngle)
@@ -75,7 +80,7 @@ class Cannon {
             Gdx.app.log("Cannon", "Could'n fire cannon due to invalid SpriteBatch")
             return
         }
-        Projectile(spriteBatch!!, projectiles!!).shoot(angle)
+        Projectile(cannonX!!, cannonY!!, spriteBatch!!, projectiles!!).shoot(angle.toDouble())
     }
 
 }

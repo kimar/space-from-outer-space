@@ -1,9 +1,11 @@
 package io.kida.spacefromouterspace.model
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import java.util.*
 
 /**
  * Created by kida on 2/01/2016.
@@ -18,6 +20,8 @@ class Cannon {
     private var texture: Texture = Texture("cannon.png")
     private var currentAngle = 90f
     private var lastPeakPoint = Direction.Right
+    private var spriteBatch: SpriteBatch? = null
+    private var projectiles: ArrayList<Projectile>? = null
 
     private fun rotateDirection(direction: Direction) {
         if (direction == Direction.Right) {
@@ -27,7 +31,9 @@ class Cannon {
         }
     }
 
-    public fun arm(batch: SpriteBatch?) {
+    public fun arm(batch: SpriteBatch?, projectile: ArrayList<Projectile>) {
+        spriteBatch = batch
+        projectiles = projectile
 
         // rotate cannon
         if (currentAngle > 90f && lastPeakPoint == Direction.Right) {
@@ -56,7 +62,20 @@ class Cannon {
 
         // rotate cannon given to the rotation vector
         sprite.rotate(currentAngle)
-        sprite.draw(batch)
+        sprite.draw(spriteBatch)
+
+        // fire?
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            fire(currentAngle)
+        }
+    }
+
+    private fun fire(angle: Float) {
+        if (spriteBatch == null) {
+            Gdx.app.log("Cannon", "Could'n fire cannon due to invalid SpriteBatch")
+            return
+        }
+        Projectile(spriteBatch!!, projectiles!!).shoot(angle)
     }
 
 }

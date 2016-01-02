@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import io.kida.spacefromouterspace.model.Cannon
+import io.kida.spacefromouterspace.model.Projectile
+import java.util.*
 
 class SpaceFromOuterSpaceGame : ApplicationAdapter() {
     internal var batch: SpriteBatch? = null
@@ -14,8 +16,11 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
     // textures
     internal var planet: Texture? = null
     internal var cannon: Cannon? = null
+    internal var projectiles: ArrayList<Projectile>? = null
 
     override fun create() {
+
+        projectiles = ArrayList<Projectile>()
         batch = SpriteBatch()
 
         // textures
@@ -34,7 +39,12 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         renderPlanet()
 
         // rotate cannon
-        cannon?.arm(batch)
+        cannon?.arm(batch, projectiles!!)
+
+        // render projectiles
+        projectiles?.forEach {
+            it.render()
+        }
 
         // end spritebatch
         batch?.end()

@@ -15,8 +15,8 @@ import java.util.*
 class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: ArrayList<Projectile>) {
 
     // private movement vars
-    private var x: Double = x
-    private var y: Double = y
+    private var x = x
+    private var y = y
     private var vSpeed: Double? = null
     private var hSpeed: Double? = null
     private var speed = 100.0
@@ -31,7 +31,7 @@ class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: ArrayList
         vSpeed = Math.sin(MathHelper().toDegree(angle)) * speed
         hSpeed = Math.cos(MathHelper().toDegree(angle)) * speed
 
-        sprite = Sprite(texture, 0, 0, 30, 39)
+        sprite = Sprite(texture, 0, 0, texture.width, texture.height)
         sprite!!.rotate(angle.toFloat())
         projectiles.add(this)
     }

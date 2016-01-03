@@ -63,7 +63,7 @@ class Cannon {
         }
 
         // render rotated cannon
-        cannonSprite = Sprite(texture, 0, 0, 37, 130)
+        cannonSprite = Sprite(texture, 0, 0, texture.width, texture.height)
 
         // set origin bo lower part of cannon
         cannonSprite?.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)

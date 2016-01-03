@@ -28,6 +28,7 @@ class Cannon {
     private var lastPeakPoint = Direction.Right
     private var spriteBatch: SpriteBatch? = null
     private var projectiles: ArrayList<Projectile>? = null
+    private var cannonSprite: Sprite? = null
 
     // lock fire button
     private var projectileFired = false
@@ -62,19 +63,19 @@ class Cannon {
         }
 
         // render rotated cannon
-        val sprite = Sprite(texture, 0, 0, 37, 130)
+        cannonSprite = Sprite(texture, 0, 0, 37, 130)
 
         // set origin bo lower part of cannon
-        sprite.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)
+        cannonSprite?.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)
 
         // position cannon in lower middle part of window
         cannonX = Gdx.graphics.width / 2.0 - texture.width / 2.0
         cannonY = Gdx.graphics.height / 4.0 - texture.height
-        sprite.setPosition(cannonX!!.toFloat(), cannonY!!.toFloat())
+        cannonSprite?.setPosition(cannonX!!.toFloat(), cannonY!!.toFloat())
 
         // rotate cannon given to the rotation vector
-        sprite.rotate(currentAngle)
-        sprite.draw(spriteBatch)
+        cannonSprite?.rotate(currentAngle)
+        cannonSprite?.draw(spriteBatch)
 
         // unlock fire button?
         if (TimeUtils.millis() >= lastFireTime + fireTimeThreshold) {
@@ -97,8 +98,8 @@ class Cannon {
             return
         }
         Projectile(
-                cannonX!!,
-                cannonY!!,
+                cannonSprite!!.vertices[SpriteBatch.X2].toDouble(),
+                cannonSprite!!.vertices[SpriteBatch.Y2].toDouble(),
                 spriteBatch!!,
                 projectiles!!
         ).shoot(angle.toDouble())

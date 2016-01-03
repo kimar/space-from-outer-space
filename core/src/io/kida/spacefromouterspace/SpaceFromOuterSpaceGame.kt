@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
-import io.kida.spacefromouterspace.helper.MathHelper
 import io.kida.spacefromouterspace.model.Cannon
 import io.kida.spacefromouterspace.model.Projectile
 import io.kida.spacefromouterspace.model.enemies.Enemy
@@ -61,12 +61,15 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         }
 
         // add random enemy
-        if(shouldAddEnemy()) {
+        val shouldAddEnemy = shouldAddEnemy()
+        if(shouldAddEnemy.yes) {
+            Gdx.app.log("Helmut approach", "fromX: ${shouldAddEnemy.x}, fromY: ${shouldAddEnemy.y}, toX: ${Gdx.graphics.width.toDouble() / 2.0}, toY: ${0.0}")
             Helmut(batch!!, enemies!!)
                     .approach(
-                            Gdx.graphics.width/2.0,
-                            Gdx.graphics.height.toDouble(),
-                            -180.0
+                            shouldAddEnemy.x,
+                            shouldAddEnemy.y,
+                            Gdx.graphics.width.toDouble() / 2.0,
+                            0.0
                     )
             lastEnemyAdded = TimeUtils.millis()
         }
@@ -83,11 +86,17 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         )
     }
 
-    fun shouldAddEnemy(): Boolean {
+    data class ShouldAddEnemyResult(val yes: Boolean, val x: Double, val y: Double)
+    fun shouldAddEnemy(): ShouldAddEnemyResult {
         if (TimeUtils.millis() >= lastEnemyAdded + 1000) {
-            return Math.random() * 10 > 5
+            val randVal = MathUtils.random(0, 100)
+            return ShouldAddEnemyResult(
+                    randVal > 50,
+                    (Gdx.graphics.width.toDouble() / 100) * randVal,
+                    Gdx.graphics.height.toDouble()
+            )
         }
-        return false
+        return ShouldAddEnemyResult(false, 0.0, 0.0)
     }
 
 }

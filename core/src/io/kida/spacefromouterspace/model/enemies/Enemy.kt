@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Interpolation
 import io.kida.spacefromouterspace.helper.MathHelper
 import java.util.*
 
@@ -28,16 +29,21 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: ArrayList<Enemy>, texture: T
     private var vSpeed: Double? = null
     private var hSpeed: Double? = null
 
-    fun approach(x: Double, y: Double, angle: Double) {
+    fun approach(fromX: Double, fromY: Double, toX: Double, toY: Double) {
 
-        xCoord = x
-        yCoord = y
+        xCoord = fromX - toX
+        yCoord = fromY - toY
+
+        val angle = Math.atan2(
+                toX - fromX,
+                toY - fromY
+        ) * 180.0 / Math.PI;
 
         vSpeed = Math.sin(MathHelper().toDegree(angle)) * speed
         hSpeed = Math.cos(MathHelper().toDegree(angle)) * speed
 
         sprite = Sprite(texture, 0, 0, texture.width, texture.height)
-        sprite!!.rotate(angle.toFloat())
+        sprite!!.rotate(angle.toFloat() - 180.0f)
 
         enemies.add(this)
     }

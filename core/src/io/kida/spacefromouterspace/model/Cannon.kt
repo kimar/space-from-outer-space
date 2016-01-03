@@ -66,16 +66,16 @@ class Cannon {
         cannonSprite = Sprite(texture, 0, 0, texture.width, texture.height)
 
         // set origin bo lower part of cannon
-        cannonSprite?.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)
+        cannonSprite!!.setOrigin(texture.width / 2.0f, (texture.height / 10.0f) * -1)
 
         // position cannon in lower middle part of window
         cannonX = Gdx.graphics.width / 2.0 - texture.width / 2.0
         cannonY = Gdx.graphics.height / 4.0 - texture.height
-        cannonSprite?.setPosition(cannonX!!.toFloat(), cannonY!!.toFloat())
+        cannonSprite!!.setPosition(cannonX!!.toFloat(), cannonY!!.toFloat())
 
         // rotate cannon given to the rotation vector
-        cannonSprite?.rotate(currentAngle)
-        cannonSprite?.draw(spriteBatch)
+        cannonSprite!!.rotate(currentAngle)
+        cannonSprite!!.draw(spriteBatch)
 
         // unlock fire button?
         if (TimeUtils.millis() >= lastFireTime + fireTimeThreshold) {

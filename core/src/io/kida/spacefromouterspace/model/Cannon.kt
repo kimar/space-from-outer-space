@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.utils.TimeUtils
+import io.kida.spacefromouterspace.helper.MathHelper
 import java.util.*
 
 /**
@@ -30,7 +32,7 @@ class Cannon {
     // lock fire button
     private var projectileFired = false
     private var lastFireTime: Long = 0
-    private val fireTimeThreshold = 500
+    private val fireTimeThreshold = 200
 
     private fun rotateDirection(direction: Direction) {
         if (direction == Direction.Right) {
@@ -75,7 +77,7 @@ class Cannon {
         sprite.draw(spriteBatch)
 
         // unlock fire button?
-        if (System.currentTimeMillis() >= lastFireTime + fireTimeThreshold) {
+        if (TimeUtils.millis() >= lastFireTime + fireTimeThreshold) {
             projectileFired = false
         }
 
@@ -83,7 +85,7 @@ class Cannon {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             if (!projectileFired) {
                 fire(currentAngle)
-                lastFireTime = System.currentTimeMillis()
+                lastFireTime = TimeUtils.millis()
             }
             projectileFired = true
         }
@@ -94,7 +96,12 @@ class Cannon {
             Gdx.app.log("Cannon", "Could'n fire cannon due to invalid SpriteBatch")
             return
         }
-        Projectile(cannonX!!, cannonY!!, spriteBatch!!, projectiles!!).shoot(angle.toDouble())
+        Projectile(
+                cannonX!!,
+                cannonY!!,
+                spriteBatch!!,
+                projectiles!!
+        ).shoot(angle.toDouble())
     }
 
 }

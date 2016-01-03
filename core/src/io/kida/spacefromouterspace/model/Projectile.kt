@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import io.kida.spacefromouterspace.helper.MathHelper
 import java.util.*
 
 /**
@@ -27,11 +28,11 @@ class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: ArrayList
     private var sprite: Sprite? = null
 
     fun shoot(angle: Double) {
-        vSpeed = Math.sin(angle) * speed
-        hSpeed = Math.cos(angle) * speed
+        vSpeed = Math.sin(MathHelper().toDegree(angle)) * speed
+        hSpeed = Math.cos(MathHelper().toDegree(angle)) * speed
 
         sprite = Sprite(texture, 0, 0, 30, 39)
-        sprite?.rotate(angle.toFloat())
+        sprite!!.rotate(angle.toFloat())
         projectiles.add(this)
     }
 

@@ -64,12 +64,14 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: CopyOnWriteArrayList<Enemy>,
     }
 
     fun projectileHit(projectiles: CopyOnWriteArrayList<Projectile>): Projectile? {
+        var projectile:Projectile? = null
         projectiles.forEach {
             if (sprite!!.boundingRectangle.overlaps(it.boundingRectangle())) {
-                return it
+                projectile = it
+                return@forEach
             }
         }
-        return null
+        return projectile
     }
 
 }

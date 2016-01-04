@@ -5,14 +5,17 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Rectangle
 import io.kida.spacefromouterspace.helper.MathHelper
+import io.kida.spacefromouterspace.model.Projectile
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Created by kida on 3/01/2016.
  */
 
-open class Enemy(spriteBatch: SpriteBatch, enemies: ArrayList<Enemy>, texture: Texture, speed: Double) {
+open class Enemy(spriteBatch: SpriteBatch, enemies: CopyOnWriteArrayList<Enemy>, texture: Texture, speed: Double) {
 
     // internal vals
     internal val texture = texture
@@ -54,6 +57,19 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: ArrayList<Enemy>, texture: T
 
         sprite?.setPosition(xCoord.toFloat(), yCoord.toFloat())
         sprite?.draw(spriteBatch)
+    }
+
+    fun kill() {
+        enemies.remove(this)
+    }
+
+    fun projectileHit(projectiles: CopyOnWriteArrayList<Projectile>): Projectile? {
+        projectiles.forEach {
+            if (sprite!!.boundingRectangle.overlaps(it.boundingRectangle())) {
+                return it
+            }
+        }
+        return null
     }
 
 }

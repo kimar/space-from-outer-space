@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.TimeUtils
 import io.kida.spacefromouterspace.helper.MathHelper
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Created by kida on 2/01/2016.
@@ -27,7 +28,7 @@ class Cannon {
     private var currentAngle = 90f
     private var lastPeakPoint = Direction.Right
     private var spriteBatch: SpriteBatch? = null
-    private var projectiles: ArrayList<Projectile>? = null
+    private var projectiles: CopyOnWriteArrayList<Projectile>? = null
     private var cannonSprite: Sprite? = null
 
     // lock fire button
@@ -43,7 +44,7 @@ class Cannon {
         }
     }
 
-    public fun arm(batch: SpriteBatch?, projectile: ArrayList<Projectile>) {
+    public fun arm(batch: SpriteBatch?, projectile: CopyOnWriteArrayList<Projectile>) {
         spriteBatch = batch
         projectiles = projectile
 

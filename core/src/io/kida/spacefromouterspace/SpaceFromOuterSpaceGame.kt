@@ -12,6 +12,7 @@ import io.kida.spacefromouterspace.model.Projectile
 import io.kida.spacefromouterspace.model.enemies.Enemy
 import io.kida.spacefromouterspace.model.enemies.Helmut
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 class SpaceFromOuterSpaceGame : ApplicationAdapter() {
 
@@ -22,13 +23,13 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
     internal var planet: Texture? = null
     internal var cannon: Cannon? = null
 
-    internal var projectiles: ArrayList<Projectile>? = null
-    internal var enemies: ArrayList<Enemy>? = null
+    internal var projectiles: CopyOnWriteArrayList<Projectile>? = null
+    internal var enemies: CopyOnWriteArrayList<Enemy>? = null
 
     override fun create() {
 
-        projectiles = ArrayList<Projectile>()
-        enemies = ArrayList<Enemy>()
+        projectiles = CopyOnWriteArrayList<Projectile>()
+        enemies = CopyOnWriteArrayList<Enemy>()
 
         batch = SpriteBatch()
 
@@ -56,8 +57,14 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         }
 
         // render existing enemies
+        // perform hit test
         enemies?.forEach {
             it.render()
+            val hitProjectile = it.projectileHit(projectiles!!)
+            if (hitProjectile != null) {
+                it.kill()
+                hitProjectile.explode()
+            }
         }
 
         // add random enemy

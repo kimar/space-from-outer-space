@@ -5,14 +5,16 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import io.kida.spacefromouterspace.helper.MathHelper
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Created by kida on 2/01/2016.
  */
 
-class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: ArrayList<Projectile>) {
+class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: CopyOnWriteArrayList<Projectile>) {
 
     // private movement vars
     private var x = x
@@ -42,5 +44,13 @@ class Projectile(x: Double, y: Double, batch: SpriteBatch, projectile: ArrayList
 
         sprite?.setPosition(x.toFloat(), y.toFloat())
         sprite?.draw(spriteBatch)
+    }
+
+    fun explode() {
+        projectiles.remove(this)
+    }
+
+    fun boundingRectangle(): Rectangle {
+        return sprite!!.boundingRectangle;
     }
 }

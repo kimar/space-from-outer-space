@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import io.kida.spacefromouterspace.model.Cannon
 import io.kida.spacefromouterspace.model.Player
 import io.kida.spacefromouterspace.model.Projectile
+import io.kida.spacefromouterspace.model.Sounds
 import io.kida.spacefromouterspace.model.enemies.Enemy
 import io.kida.spacefromouterspace.model.enemies.Helmut
 import java.util.*
@@ -32,11 +33,13 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
     internal var enemies: CopyOnWriteArrayList<Enemy>? = null
 
     internal var player = Player()
+    internal var sounds = Sounds()
 
     override fun create() {
 
         projectiles = CopyOnWriteArrayList<Projectile>()
         enemies = CopyOnWriteArrayList<Enemy>()
+        sounds.load()
 
         batch = SpriteBatch()
 
@@ -45,6 +48,11 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
 
         // model
         cannon = Cannon()
+    }
+
+    override fun dispose() {
+        sounds.unload()
+        super.dispose()
     }
 
     override fun render() {
@@ -56,7 +64,7 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         renderPlanet()
 
         // rotate cannon
-        cannon?.arm(batch, player, projectiles!!)
+        cannon?.arm(batch, player, sounds, projectiles!!)
 
         // render projectiles
         projectiles?.forEach {
@@ -72,10 +80,12 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
             if (hitProjectile != null) {
                 it.kill()
                 hitProjectile.explode()
+                sounds.explosion?.play()
                 player.increaseScore()
             }
             if (it.hasSurvived()) {
                 player.decreaseLife()
+                sounds.alien?.play()
                 it.kill()
             }
         }

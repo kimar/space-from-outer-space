@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.TimeUtils
-import io.kida.spacefromouterspace.helper.MathHelper
-import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -37,6 +35,7 @@ class Cannon {
     private val fireTimeThreshold = 200
 
     private var mPlayer: Player? = null
+    private var mSounds: Sounds? = null
 
     private fun rotateDirection(direction: Direction) {
         if (direction == Direction.Right) {
@@ -46,10 +45,11 @@ class Cannon {
         }
     }
 
-    public fun arm(batch: SpriteBatch?, player: Player, projectile: CopyOnWriteArrayList<Projectile>) {
+    public fun arm(batch: SpriteBatch?, player: Player, sounds: Sounds, projectile: CopyOnWriteArrayList<Projectile>) {
         spriteBatch = batch
         projectiles = projectile
         mPlayer = player
+        mSounds = sounds
 
         // rotate cannon
         if (currentAngle > 90f && lastPeakPoint == Direction.Right) {
@@ -108,6 +108,7 @@ class Cannon {
                 projectiles!!
         ).shoot(angle.toDouble())
         mPlayer!!.decreaseAmmo()
+        mSounds!!.missile?.play()
     }
 
 }

@@ -36,6 +36,8 @@ class Cannon {
     private var lastFireTime: Long = 0
     private val fireTimeThreshold = 200
 
+    private var mPlayer: Player? = null
+
     private fun rotateDirection(direction: Direction) {
         if (direction == Direction.Right) {
             currentAngle -= 100 * Gdx.graphics.deltaTime
@@ -44,9 +46,10 @@ class Cannon {
         }
     }
 
-    public fun arm(batch: SpriteBatch?, projectile: CopyOnWriteArrayList<Projectile>) {
+    public fun arm(batch: SpriteBatch?, player: Player, projectile: CopyOnWriteArrayList<Projectile>) {
         spriteBatch = batch
         projectiles = projectile
+        mPlayer = player
 
         // rotate cannon
         if (currentAngle > 90f && lastPeakPoint == Direction.Right) {
@@ -104,6 +107,7 @@ class Cannon {
                 spriteBatch!!,
                 projectiles!!
         ).shoot(angle.toDouble())
+        mPlayer!!.decreaseAmmo()
     }
 
 }

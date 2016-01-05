@@ -2,17 +2,22 @@ package io.kida.spacefromouterspace
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.TimeUtils
 import io.kida.spacefromouterspace.model.Cannon
+import io.kida.spacefromouterspace.model.Player
 import io.kida.spacefromouterspace.model.Projectile
 import io.kida.spacefromouterspace.model.enemies.Enemy
 import io.kida.spacefromouterspace.model.enemies.Helmut
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.count
 
 class SpaceFromOuterSpaceGame : ApplicationAdapter() {
 
@@ -25,6 +30,8 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
 
     internal var projectiles: CopyOnWriteArrayList<Projectile>? = null
     internal var enemies: CopyOnWriteArrayList<Enemy>? = null
+
+    internal var player = Player()
 
     override fun create() {
 
@@ -49,7 +56,7 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
         renderPlanet()
 
         // rotate cannon
-        cannon?.arm(batch, projectiles!!)
+        cannon?.arm(batch, player, projectiles!!)
 
         // render projectiles
         projectiles?.forEach {
@@ -58,18 +65,25 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
 
         // render existing enemies
         // perform hit test
+        // check if enemy has made it through
         enemies?.forEach {
             it.render()
             val hitProjectile = it.projectileHit(projectiles!!)
             if (hitProjectile != null) {
                 it.kill()
                 hitProjectile.explode()
+                player.increaseScore()
+            }
+            if (it.hasSurvived()) {
+                player.decreaseLife()
+                it.kill()
             }
         }
 
         // add random enemy
         val shouldAddEnemy = shouldAddEnemy()
         if(shouldAddEnemy.yes) {
+//        if (enemies?.count() == 0 && shouldAddEnemy.yes) {
             Gdx.app.log("Helmut approach", "fromX: ${shouldAddEnemy.x}, fromY: ${shouldAddEnemy.y}, toX: ${Gdx.graphics.width.toDouble() / 2.0}, toY: ${0.0}")
             Helmut(batch!!, enemies!!)
                     .approach(
@@ -80,6 +94,11 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
                     )
             lastEnemyAdded = TimeUtils.millis()
         }
+
+        // render labels
+        renderAmmo()
+        renderLife()
+        renderScore()
 
         // end spritebatch
         batch?.end()
@@ -104,6 +123,39 @@ class SpaceFromOuterSpaceGame : ApplicationAdapter() {
             )
         }
         return ShouldAddEnemyResult(false, 0.0, 0.0)
+    }
+
+    fun getCommonFont(): BitmapFont {
+        val font = BitmapFont()
+        font.color = Color.WHITE
+        return font
+    }
+
+    fun renderAmmo() {
+        getCommonFont().draw(
+                batch,
+                "Ammo: ${player.getAmmo()}",
+                10.0f,
+                Gdx.graphics.height.toFloat() - 10
+        )
+    }
+
+    fun renderLife() {
+        getCommonFont().draw(
+                batch,
+                "Life: ${player.getLife()}",
+                Gdx.graphics.width.toFloat() - 100,
+                Gdx.graphics.height.toFloat() - 10
+        )
+    }
+
+    fun renderScore() {
+        getCommonFont().draw(
+                batch,
+                "Score: ${player.getScore()}",
+                Gdx.graphics.width / 2.0f - 50,
+                Gdx.graphics.height.toFloat() - 10
+        )
     }
 
 }

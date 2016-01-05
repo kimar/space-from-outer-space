@@ -31,16 +31,18 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: CopyOnWriteArrayList<Enemy>,
     private var yCoord = 0.0
     private var vSpeed: Double? = null
     private var hSpeed: Double? = null
+    private var victoryIsMine = 0.0
 
     fun approach(fromX: Double, fromY: Double, toX: Double, toY: Double) {
 
+        victoryIsMine = Gdx.graphics.height.toDouble()
         xCoord = fromX - toX
         yCoord = fromY - toY
 
         val angle = Math.atan2(
                 toX - fromX,
                 toY - fromY
-        ) * 180.0 / Math.PI;
+        ) * 180.0 / Math.PI
 
         vSpeed = Math.sin(MathHelper().toDegree(angle)) * speed
         hSpeed = Math.cos(MathHelper().toDegree(angle)) * speed
@@ -54,6 +56,7 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: CopyOnWriteArrayList<Enemy>,
     fun render() {
         xCoord += hSpeed!! * Gdx.graphics.deltaTime
         yCoord += vSpeed!! * Gdx.graphics.deltaTime
+        victoryIsMine += vSpeed!! * Gdx.graphics.deltaTime
 
         sprite?.setPosition(xCoord.toFloat(), yCoord.toFloat())
         sprite?.draw(spriteBatch)
@@ -61,6 +64,10 @@ open class Enemy(spriteBatch: SpriteBatch, enemies: CopyOnWriteArrayList<Enemy>,
 
     fun kill() {
         enemies.remove(this)
+    }
+
+    fun hasSurvived(): Boolean {
+        return victoryIsMine <= 0
     }
 
     fun projectileHit(projectiles: CopyOnWriteArrayList<Projectile>): Projectile? {
